@@ -1,200 +1,48 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Nullable>disable</Nullable>
-        <Configurations>Release_2019;Release_2018;Release_2020;Release_2021;Release_2022;Release_2023;Release_2024;Release_2025</Configurations>
+        <TargetFramework>net48</TargetFramework>
         <Platforms>x64</Platforms>
+        <PlatformTarget>x64</PlatformTarget>
+        <LangVersion>latest</LangVersion>
+        <Nullable>disable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <!-- Navisworks Manage 2026 install folder (override with /p:NavisworksPath=...) -->
+        <NavisworksPath Condition="'$(NavisworksPath)' == ''">C:\Program Files\Autodesk\Navisworks Manage 2026</NavisworksPath>
     </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2018|x64' ">
-        <TargetFramework>net46</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2019|x64' ">
-        <TargetFramework>net47</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2020|x64' ">
-        <TargetFramework>net47</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2021|x64' ">
-        <TargetFramework>net47</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2022|x64' ">
-        <TargetFramework>net47</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2023|x64' ">
-        <TargetFramework>net48</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2024|x64' ">
-        <TargetFramework>net48</TargetFramework>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release_2025|x64' ">
-        <TargetFramework>net48</TargetFramework>
-    </PropertyGroup>
-
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2018'">
+    <ItemGroup>
         <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2018_dll\Autodesk.Navisworks.Api.dll</HintPath>
+            <HintPath>$(NavisworksPath)\Autodesk.Navisworks.Api.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2018_dll\Autodesk.Navisworks.Clash.dll</HintPath>
+            <HintPath>$(NavisworksPath)\Autodesk.Navisworks.Clash.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2018_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
+            <HintPath>$(NavisworksPath)\Autodesk.Navisworks.ComApi.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2018_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2019'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2019_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2019_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2019_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2019_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2020'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2020_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2020_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2020_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2020_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2021'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2021_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2021_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2021_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2021_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2022'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2022_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2022_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2022_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2022_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2023'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2023_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2023_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2023_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2023_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2024'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2024_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2024_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2024_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2024_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_2025'">
-        <Reference Include="Autodesk.Navisworks.Api">
-            <HintPath>..\Navisworks_Dll\2025_dll\Autodesk.Navisworks.Api.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Clash">
-            <HintPath>..\Navisworks_Dll\2025_dll\Autodesk.Navisworks.Clash.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.ComApi">
-            <HintPath>..\Navisworks_Dll\2025_dll\Autodesk.Navisworks.ComApi.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-            <HintPath>..\Navisworks_Dll\2025_dll\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+            <HintPath>$(NavisworksPath)\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClosedXML" Version="0.96.0"/>
-        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
-        <PackageReference Include="Serilog" Version="2.12.0" />
+        <PackageReference Include="ClosedXML" Version="0.104.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Images\Icon_16.png"/>
         <Content Include="Images\Icon_16.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="Images\Icon_32.png"/>
         <Content Include="Images\Icon_32.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="System.Windows.Forms"/>
     </ItemGroup>
 
 </Project>

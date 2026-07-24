@@ -1,276 +1,77 @@
-# Navisworks Clash Exporting
+# Navisworks Clash Exporter (2026)
 
-## Installation
+A Navisworks Manage **2026** add-in that exports the clash tests ("clash reports") in the
+currently open document to a formatted Excel (`.xlsx`) workbook.
 
-You can Download the installer [Here](https://github.com/Coolicky/Navisworks.Clash.Exporter/releases/latest)
+## Requirements
 
-##### Installation Location
+- Autodesk Navisworks Manage 2026 (references the API DLLs from its install folder).
+- .NET Framework 4.8 (installed with Navisworks 2026).
 
-The plugin should be installed `%AppData%\Autodesk\ApplicationPlugins\Navisworks.Clash.Exporter.bundle`
+## Build
 
-### Using Directly from Navisworks
-
-Inside the Navisworks Manage You should see an additional tab "Export add-ins 1" with a new button "Export Clashes".
-
-Once clicked it will ask You to specify an Excel file (.xlsx). The application should export a clash report (see details below)
-
-## Excel Export
-
-The Exported Excel file should contain:
-
-- Clash Test Summary
-  
-  > Summary will contain list of tests with clash count per status (New, Active, Reviewed, Approved, Resolved, Total)
-
-- Clash Tests Details
-  
-  > `Name` Name of the Clash Test
-  > 
-  > `Guid` Unique Test Identifier
-  > 
-  > `No. Clashes` Count of clashes in the test
-  > 
-  > `Status`
-  > 
-  > `Last Run` Date & Time of the last time the test was run
-  > 
-  > `Test Type`
-  > 
-  > `Tolerance` Tolerance Distance (mm by default, change using optional arguments, see below)
-
-- Clash Groups Details
-  
-  > `Test Guid` Reference to the Clash Test to which the Group belongs
-  > 
-  > `Name` Name of the Clash Group
-  > 
-  > `Guid` Unique Test Identifier
-  > 
-  > `No. Clashes` Count of clashes in the test
-  > 
-  > `Approved By`
-  > 
-  > `Approved Time` (If none will display default Unix Time (01/01/1970))
-  > 
-  > `Assigned To`
-  > 
-  > `Center` The Coordinates of the center of the clash
-  > 
-  > `Created Time`
-  > 
-  > `Description`
-  > 
-  > `Distance` The distance of the clash overlap (For Group the Most severe clash) (mm by default, change using optional arguments, see below)
-  > 
-  > `Status`
-
-- Clash Results Details
-  
-  > `Test Guid` Reference to the Clash Test to which the Group belongs
-  > 
-  > `Group Guid` Reference to the Clash Group to which the Test belongs
-  > 
-  > `Name` Name of the Clash Group
-  > 
-  > `Guid` Unique Test Identifier
-  > 
-  > `No. Clashes` Count of clashes in the test
-  > 
-  > `Approved By`
-  > 
-  > `Approved Time` (If none will display default Unix Time (01/01/1970))
-  > 
-  > `Assigned To`
-  > 
-  > `Center` The Coordinates of the center of the clash
-  > 
-  > `Created Time`
-  > 
-  > `Description`
-  > 
-  > `Distance` The distance of the clash overlap (For Group the Most severe clash) (mm by default, change using optional arguments, see below)
-  > 
-  > `Status`
-  > 
-  > `Item 1 Guid` Reference to the First Clashing Item
-  > 
-  > `Item 2 Guid` Reference to the Second Clashing Item
-  > 
-  > `Grid Intersection` Name of the closest Grid Intersection to the center of the clash
-  > 
-  > `Level` Name of the Closest Level to the center of the Clash
-
-- Clashing Elements Details
-  
-  > `Name` Name of the Element
-  > 
-  > `Guid` Unique Identifier of the Element
-  > 
-  > `ClassName` Class Name (type) of the element
-  > 
-  > `Model` The name of the source model to which the element belongs or "Error_NotFound" if SourceFileName could not be obtained
-  > 
-  > Additional Columns can be added using [Quick Properties](%5BHelp%5D(https://help.autodesk.com/view/NAV/2020/ENU/?guid=GUID-1555C5C2-923B-4342-8120-6BB0EADF45E1)). Each Quick Property will display as additional column for the elements
-
-- Clash Comments
-  
-  > `Owner Guid` Identifier of the owner (either Clash, Group or Test)
-  > 
-  > `ID`
-  > 
-  > `Author`
-  > 
-  > `Body` The text of the comment itself
-  > 
-  > `Status`
-  > 
-  > `Creation Date`
-
-- Historical Summary
-  
-  > **Only for Automatic Setup**
-  > 
-  > Historical Summary is almost identical to Summary Page. However it will additionally include a `Date` Column. Previous summaries will be saved in this Page allowing for comparison over time.
-
-The Excel can be used as a Data Source for Power Bi Report and relationship between the tables can be established using the `Guid` values.
-
-```mermaid
-erDiagram
-    direction LR
-    ClashTest {
-        string Guid PK "Unique Test Identifier"
-        string Other "Other Properties..."
-    }
-    ClashGroup {
-        string Guid PK "Unique Group Identifier"
-        string TestGuid FK "Reference to ClashTest"
-        string Other "Other Properties..."
-    }
-    ClashResult {
-        string Guid PK "Unique Result Identifier"
-        string TestGuid FK "Reference to ClashTest"
-        string GroupGuid FK "Reference to ClashGroup"
-        string Other "Other Properties..."
-        string Item1Guid "Reference to ClashingElement"
-        string Item2Guid "Reference to ClashingElement"
-    }
-    ClashingElement {
-        string Guid PK "Unique Element Identifier"
-        string Other "Other Properties..."
-    }
-    ClashComment {
-        string ID PK
-        string OwnerGuid
-        string Other "Other Properties..."
-    }
-
-    ClashTest ||--o{ ClashGroup : "Test GUID"
-    ClashTest ||--o{ ClashResult : "Test GUID"
-    ClashResult ||--|| ClashingElement : "Item1Guid"
-    ClashResult ||--|| ClashingElement : "Item2Guid"
-    ClashResult ||--o{ ClashComment : "Result GUID"
-    ClashGroup ||--o{ ClashComment : "Group GUID"
-    ClashTest  ||--o{ ClashComment : "Test GUID"
+```bash
+dotnet build Navisworks.Clash.Exporter/Navisworks.Clash.Exporter.csproj -c Release
 ```
 
-## Automation
+The build references the Navisworks API assemblies from
+`C:\Program Files\Autodesk\Navisworks Manage 2026`. If Navisworks is installed elsewhere,
+override the path:
 
-#### Features
+```bash
+dotnet build -c Release /p:NavisworksPath="D:\Autodesk\Navisworks Manage 2026"
+```
 
-The application will
+## Install
 
-1. Re-Run all previously set up tests.
+Copy the contents of `bin\Release` (the plugin DLL, the `Images` folder, and all the
+ClosedXML dependency DLLs) into a plugin bundle folder:
 
-2. Group Clashes (if required)
+```
+%AppData%\Autodesk\ApplicationPlugins\Navisworks.Clash.Exporter.bundle\Contents\
+```
 
-3. Exports Clash Report to Excel (.xlsx)
+The bundled dependencies are loaded at runtime by the `AssemblyLoader` plugin, so they must
+sit next to the plugin DLL.
 
-4. Saves Previous Exports (if required)
+## Usage
 
-5. Saves the Navisworks File
+In Navisworks Manage, open the **Export add-ins** ribbon tab and click **Export Clashes to
+Excel**. Choose a destination `.xlsx` file and the workbook is written with two sheets.
 
-#### Set-up
+### Summary sheet
 
-##### Command Line
+One row per clash report, with:
 
-You can run the Automation from Command Line. Either create an empty .cmd file or create a new task in Task Scheduler.
+| Column | Description |
+| --- | --- |
+| Clash Report | Name of the clash test |
+| Status | Test status |
+| Test Type | Hard / Clearance / Duplicate etc. |
+| Tolerance (mm) | Test tolerance in millimetres |
+| Last Run | When the test was last run |
+| New / Active / Reviewed / Approved / Resolved | Clash counts per status |
+| Total | Total clashes in the report |
 
-Point to the automation executable.`%AppData%\Autodesk\ApplicationPlugins\Navisworks.Clash.Exporter.bundle\Automation\VERSION\Navisworks.Clash.Exporter.Automation.exe`
+### Clash Results sheet
 
-And provide appropriate arguments
+One row per individual clash (grouped clashes are flattened), with:
 
-> `-n, --navisworks`
-> 
-> followed by the path to the Navisworks file (.nwd/.nwf) inside quotation marks
-> 
-> e.g. `-n "C:\Folder\File.nwf"`
-> 
-> or `--navisworks "C:\Folder\File.nwf"`
-
-> ``-f, --exportFolder``
-> 
-> followed by the path the folder where exported Excel file will be saved inside quotation marks
-> 
-> e.g. `-f "C:\Folder\Export"`
-> 
-> or `--exportFolder "C:\Folder\Export"`
-
-> `-l, --logLocation`
-> 
-> followed by the path to the folder where logs will be saved
-> 
-> e.g. `-l "C:\Folder\Logs"`
-> 
-> or `--logLocation "C:\Folder\Logs"`
-
-##### Optional Arguments
-
-In addition to required arguments above you can provide further optional arguments
-
-> `--groupBy`
-> 
-> followed by a grouping. For options see below.
-> 
-> e.g. `--groupBy Level`
-
-> `--thenBy`
-> 
-> followed by a grouping. For options see below.
-> 
-> e.g. `--thenBy GridIntersection`
-
-> Grouping Options:
-> 
-> > `Level`
-> > 
-> > `GridIntersection`
-> > 
-> > `SelectionA`
-> > 
-> > `SelectionB`
-> > 
-> > `ModelA`
-> > 
-> > `ModelB`
-> > 
-> > `AssignedTo`
-> > 
-> > `ApprovedBy`
-> > 
-> > `Status`
-> > 
-> > `ItemTypeA`
-> > 
-> > `ItemTypeB`
-
-> `--keepGroups` To keep existing groups
-
-> `--imperial` To export using Imperial Unit System (Will convert distance measurement to feet)
-
-> `--skipRefresh` To skip re-running clash tests
-
-> `--savePrevious` To save previous reports (will copy to "Previous" folder with appropriate time tamp)
-
-> `--skipFileSave` Will skip saving the navisworks file.
-
-Keep all the arguments in a single line. The final result should look similar to the one below: `%AppData%\Autodesk\ApplicationPlugins\Navisworks.Clash.Exporter.bundle\Automation\2022\Navisworks.Clash.Exporter.Automation.exe -n "C:\Folder\File.nwf" -f "C:\Folder\Export" -f "C:\Folder\Export" --groupBy Level --savePrevious`
+| Column | Description |
+| --- | --- |
+| Clash Report | Name of the parent clash test |
+| Group | Name of the clash group, if the clash belongs to one |
+| Clash Name | Name of the clash |
+| Priority | Clash priority value (as shown in Clash Detective) |
+| Status | New / Active / Reviewed / Approved / Resolved |
+| Distance (mm) | Overlap / clearance distance in millimetres |
+| Description | Clash description |
+| Date Found | When the clash was first created |
+| Assigned To | Assignee display name |
+| Approved By / Approved Time | Approval details |
+| Level | Closest level to the clash centre |
+| Grid Intersection | Closest grid intersection to the clash centre |
+| Location (X, Y, Z) | Coordinates of the clash centre |
+| Item 1 / Item 2 Name, Id, Source File | The two clashing elements |
+| Comments | Clash comments joined with " \| " |
+| Clash Guid | Unique clash identifier |
