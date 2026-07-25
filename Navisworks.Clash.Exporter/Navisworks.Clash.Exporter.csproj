@@ -34,15 +34,26 @@
 
     <ItemGroup>
         <PackageReference Include="ClosedXML" Version="0.104.2" />
+        <!-- Build-time only: merges all managed dependencies into a single plugin DLL. -->
+        <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.34.2" PrivateAssets="all" />
     </ItemGroup>
 
+    <!-- Icons are embedded in the plugin DLL (referenced by resource name for the add-in and
+         command icons). -->
     <ItemGroup>
-        <Content Include="Images\Icon_16.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="Images\Icon_32.png">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <EmbeddedResource Include="Images\Icon_16.png" />
+        <EmbeddedResource Include="Images\Icon_32.png" />
+    </ItemGroup>
+
+    <!-- The RME Tools ribbon layout must ship as a loose file in a culture sub-folder (en-US)
+         next to the DLL; Navisworks cannot load it from an embedded resource. -->
+    <ItemGroup>
+        <Content Include="en-US\RmeToolsRibbon.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+
+    <!-- The single-DLL merge is driven by ILRepack.targets (next to this file), which also
+         disables the package's built-in auto-merge so we can supply the Navisworks search path. -->
 
 </Project>

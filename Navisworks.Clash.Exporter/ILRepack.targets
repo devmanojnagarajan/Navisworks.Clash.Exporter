@@ -1,0 +1,41 @@
+<Project>
+
+    <!--
+      Presence of this file disables ILRepack.Lib.MSBuild.Task's built-in auto-merge target
+      (which cannot resolve the external Autodesk.Navisworks.* references) and drives the merge
+      ourselves so we can point ILRepack at the Navisworks install folder for reference resolution.
+
+      Result: ClosedXML and every transitive managed dependency are fused into
+      Navisworks.Clash.Exporter.dll, and the loose dependency DLLs/PDBs are deleted, leaving a
+      single self-contained plugin DLL in the output folder.
+    -->
+    <Target Name="MergeDependencies" AfterTargets="Build">
+        <ItemGroup>
+            <!-- Primary assembly must be first; everything else in the output is a dependency. -->
+            <MergeInputs Include="$(OutputPath)$(TargetName).dll" />
+            <MergeInputs Include="$(OutputPath)*.dll" Exclude="$(OutputPath)$(TargetName).dll" />
+            <!-- Search paths so ILRepack can resolve external (non-merged) references. -->
+            <MergeSearchDirs Include="$(OutputPath)" />
+            <MergeSearchDirs Include="$(NavisworksPath)" />
+        </ItemGroup>
+
+        <Message Importance="high" Text="ILRepack: merging @(MergeInputs->Count()) assemblies into $(TargetName).dll" />
+
+        <ILRepack
+            Parallel="true"
+            Internalize="true"
+            DebugInfo="false"
+            InputAssemblies="@(MergeInputs)"
+            LibraryPath="@(MergeSearchDirs)"
+            TargetKind="Dll"
+            OutputFile="$(OutputPath)$(TargetName).dll" />
+
+        <!-- Leave only the single merged plugin DLL in the output folder. -->
+        <ItemGroup>
+            <MergedDeps Include="$(OutputPath)*.dll" Exclude="$(OutputPath)$(TargetName).dll" />
+            <MergedPdbs Include="$(OutputPath)*.pdb" Exclude="$(OutputPath)$(TargetName).pdb" />
+        </ItemGroup>
+        <Delete Files="@(MergedDeps);@(MergedPdbs)" />
+    </Target>
+
+</Project>

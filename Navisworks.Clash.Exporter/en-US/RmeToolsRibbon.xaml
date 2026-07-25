@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ribbon layout for the "RME Tools" tab. Navisworks loads this as a LOOSE file from the
+  culture sub-folder (en-US) next to the plugin DLL - it must NOT be an embedded resource.
+  Referenced by [RibbonLayout("RmeToolsRibbon")] on RmeToolsRibbon.
+
+  Ids must match the code:
+    RibbonTab    Id="ID_RmeTools"             -> [RibbonTab("ID_RmeTools")]
+    RibbonButton Id="ID_ExportClashesToExcel" -> [Command("ID_ExportClashesToExcel")]
+
+  Add future RME tools by adding a <RibbonButton> here (in the "Exports" panel or a new
+  <RibbonPanel>) with an Id that matches a [Command] in RmeToolsRibbon.cs.
+-->
+<RibbonControl
+    xmlns="clr-namespace:Autodesk.Windows;assembly=AdWindows"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+   <RibbonTab Id="ID_RmeTools" Title="RME Tools" KeyTip="RM" IsVisible="True" Name="RME Tools">
+
+      <!-- Exports panel -->
+      <RibbonPanel>
+         <RibbonPanelSource Id="ID_RmeExports" Title="Exports" Name="Exports">
+
+            <RibbonButton Id="ID_ExportClashesToExcel"
+                          Text="Export Clashes to Excel"
+                          ShowText="True"
+                          Size="Large"/>
+
+         </RibbonPanelSource>
+      </RibbonPanel>
+
+   </RibbonTab>
+</RibbonControl>

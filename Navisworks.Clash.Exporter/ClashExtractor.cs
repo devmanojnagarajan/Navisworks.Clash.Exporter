@@ -79,7 +79,7 @@ namespace Navisworks.Clash.Exporter
                 GroupName = (clash.Parent as ClashResultGroup)?.DisplayName,
                 ClashName = clash.DisplayName,
                 ClashGuid = clash.Guid.ToString(),
-                Priority = clash.Priority.ToString(),
+                Priority = GetEffectivePriority(clash),
                 Status = clash.Status.ToString(),
                 DistanceMm = clash.Distance.ToMillimetres(),
                 Description = clash.Description,
@@ -112,6 +112,21 @@ namespace Navisworks.Clash.Exporter
             FillItem(clash.Item2, name => row.Item2Name = name, id => row.Item2Id = id, src => row.Item2SourceFile = src);
 
             return row;
+        }
+
+        /// <summary>
+        /// The clash priority as shown in Clash Detective. Priority is often assigned to a clash
+        /// group rather than each child clash, so when a grouped clash has no priority of its own
+        /// (0) we fall back to the group's. Returns null when no priority is set (blank in Excel,
+        /// matching Clash Detective).
+        /// </summary>
+        private static int? GetEffectivePriority(ClashResult clash)
+        {
+            var priority = clash.Priority;
+            if (priority == 0 && clash.Parent is ClashResultGroup group)
+                priority = group.Priority;
+
+            return priority == 0 ? (int?)null : priority;
         }
 
         private static void FillItem(ModelItem item, Action<string> setName, Action<string> setId,

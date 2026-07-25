@@ -22,22 +22,34 @@ override the path:
 dotnet build -c Release /p:NavisworksPath="D:\Autodesk\Navisworks Manage 2026"
 ```
 
+The build produces a **single self-contained DLL**,
+`bin\Release\Navisworks.Clash.Exporter.dll`. ClosedXML and every one of its dependencies are
+merged into that one file by [ILRepack](https://github.com/gluck/il-repack), and the two ribbon
+icons are embedded as resources — there are no loose dependency DLLs and no `Images` folder to
+ship. (The accompanying `.pdb` is optional debug symbols and is not needed at runtime.)
+
 ## Install
 
-Copy the contents of `bin\Release` (the plugin DLL, the `Images` folder, and all the
-ClosedXML dependency DLLs) into a plugin bundle folder:
+Drop the single DLL into a folder named after it inside the Navisworks `Plugins` directory —
+the folder name must match the DLL name:
 
 ```
-%AppData%\Autodesk\ApplicationPlugins\Navisworks.Clash.Exporter.bundle\Contents\
+C:\Program Files\Autodesk\Navisworks Manage 2026\Plugins\Navisworks.Clash.Exporter\Navisworks.Clash.Exporter.dll
 ```
 
-The bundled dependencies are loaded at runtime by the `AssemblyLoader` plugin, so they must
-sit next to the plugin DLL.
+Restart Navisworks and the add-in appears on the **Export add-ins** ribbon tab. That is the only
+file you need to copy.
 
 ## Usage
 
-In Navisworks Manage, open the **Export add-ins** ribbon tab and click **Export Clashes to
-Excel**. Choose a destination `.xlsx` file and the workbook is written with two sheets.
+In Navisworks Manage, open the **RME Tools** ribbon tab and, in the **Exports** panel, click
+**Export Clashes to Excel**. Choose a destination `.xlsx` file and the workbook is written with
+two sheets.
+
+> The add-in registers its own **RME Tools** ribbon tab (a `CommandHandlerPlugin` with the ribbon
+> layout in the embedded `RmeToolsRibbon.xaml`) rather than sitting in the generic add-ins tab.
+> Future RME tools can be added under this same tab — see the extension notes in
+> `RmeToolsRibbon.cs`.
 
 ### Summary sheet
 

@@ -9,7 +9,7 @@ namespace Navisworks.Clash.Exporter.Models
         public string GroupName { get; set; }
         public string ClashName { get; set; }
         public string ClashGuid { get; set; }
-        public string Priority { get; set; }
+        public int? Priority { get; set; }
         public string Status { get; set; }
         public double DistanceMm { get; set; }
         public string Description { get; set; }

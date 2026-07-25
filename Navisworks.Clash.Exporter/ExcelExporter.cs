@@ -69,7 +69,7 @@ namespace Navisworks.Clash.Exporter
                 ws.Cell(r, 1).Value = row.TestName;
                 ws.Cell(r, 2).Value = row.GroupName;
                 ws.Cell(r, 3).Value = row.ClashName;
-                ws.Cell(r, 4).Value = row.Priority;
+                if (row.Priority.HasValue) ws.Cell(r, 4).Value = row.Priority.Value;
                 ws.Cell(r, 5).Value = row.Status;
                 ws.Cell(r, 6).Value = row.DistanceMm;
                 ws.Cell(r, 7).Value = row.Description;
