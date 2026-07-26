@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using Autodesk.Navisworks.Api.Clash;
 using Application = Autodesk.Navisworks.Api.Application;
@@ -45,7 +46,7 @@ namespace Navisworks.Clash.Exporter
                 Application.EndProgress();
 
                 MessageBox.Show(
-                    $"Exported {data.Clashes.Count} clashes from {data.Summary.Count} clash reports to:\n{fileName}",
+                    $"Exported {data.Summary.Sum(s => s.Total)} clashes from {data.Summary.Count} clash reports to:\n{fileName}",
                     "Export Clashes", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception e)

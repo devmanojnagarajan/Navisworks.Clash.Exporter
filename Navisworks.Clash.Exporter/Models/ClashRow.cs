@@ -2,10 +2,18 @@ using System;
 
 namespace Navisworks.Clash.Exporter.Models
 {
-    /// <summary>One row per clash result on the "Clash Results" worksheet.</summary>
+    /// <summary>
+    /// One row per clash result on the single "Clash Results" worksheet. Carries the
+    /// attributes of the clash test it came from so every test - grouped, individual
+    /// or empty - is readable from one flat sheet.
+    /// </summary>
     public class ClashRow
     {
         public string TestName { get; set; }
+        public string TestStatus { get; set; }
+        public string TestType { get; set; }
+        public double TestToleranceMm { get; set; }
+        public DateTime? TestLastRun { get; set; }
         public string GroupName { get; set; }
         public string ClashName { get; set; }
         public string ClashGuid { get; set; }

@@ -2,7 +2,10 @@ using System;
 
 namespace Navisworks.Clash.Exporter.Models
 {
-    /// <summary>One row per clash test on the "Summary" worksheet.</summary>
+    /// <summary>
+    /// Per-test totals. Not written to the workbook (everything goes on the single
+    /// "Clash Results" sheet) - used to report what was exported.
+    /// </summary>
     public class ClashTestSummaryRow
     {
         public string TestName { get; set; }

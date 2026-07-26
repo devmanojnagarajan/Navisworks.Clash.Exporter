@@ -43,35 +43,28 @@ file you need to copy.
 ## Usage
 
 In Navisworks Manage, open the **RME Tools** ribbon tab and, in the **Exports** panel, click
-**Export Clashes to Excel**. Choose a destination `.xlsx` file and the workbook is written with
-two sheets.
+**Export Clashes to Excel**. Choose a destination `.xlsx` file and a single workbook is written
+with a single **Clash Results** sheet holding every clash from every clash test in the document.
 
 > The add-in registers its own **RME Tools** ribbon tab (a `CommandHandlerPlugin` with the ribbon
 > layout in the embedded `RmeToolsRibbon.xaml`) rather than sitting in the generic add-ins tab.
 > Future RME tools can be added under this same tab — see the extension notes in
 > `RmeToolsRibbon.cs`.
 
-### Summary sheet
-
-One row per clash report, with:
-
-| Column | Description |
-| --- | --- |
-| Clash Report | Name of the clash test |
-| Status | Test status |
-| Test Type | Hard / Clearance / Duplicate etc. |
-| Tolerance (mm) | Test tolerance in millimetres |
-| Last Run | When the test was last run |
-| New / Active / Reviewed / Approved / Resolved | Clash counts per status |
-| Total | Total clashes in the report |
-
 ### Clash Results sheet
 
-One row per individual clash (grouped clashes are flattened), with:
+One row per individual clash — grouped clashes are flattened alongside ungrouped ones, and every
+clash test in the document lands on this one sheet. The test-level attributes are repeated on each
+row, so no second sheet is needed. A clash test that found nothing still gets a row, with the
+clash columns left blank.
 
 | Column | Description |
 | --- | --- |
 | Clash Report | Name of the parent clash test |
+| Test Status | Status of the clash test |
+| Test Type | Hard / Clearance / Duplicate etc. |
+| Tolerance (mm) | Test tolerance in millimetres |
+| Last Run | When the test was last run |
 | Group | Name of the clash group, if the clash belongs to one |
 | Clash Name | Name of the clash |
 | Priority | Clash priority value (as shown in Clash Detective) |

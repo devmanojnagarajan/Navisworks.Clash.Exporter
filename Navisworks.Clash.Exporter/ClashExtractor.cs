@@ -46,6 +46,13 @@ namespace Navisworks.Clash.Exporter
                     Total = allResults.Count
                 });
 
+                if (allResults.Count == 0)
+                {
+                    // Keep the test visible on the sheet even when it found nothing.
+                    result.Clashes.Add(NewRow(test));
+                    continue;
+                }
+
                 foreach (var clash in allResults)
                     result.Clashes.Add(BuildRow(test, clash, gridSystem));
             }
@@ -71,26 +78,36 @@ namespace Navisworks.Clash.Exporter
             }
         }
 
-        private static ClashRow BuildRow(ClashTest test, ClashResult clash, GridSystem gridSystem)
+        /// <summary>A row pre-filled with the attributes of the clash test it belongs to.</summary>
+        private static ClashRow NewRow(ClashTest test)
         {
-            var row = new ClashRow
+            return new ClashRow
             {
                 TestName = test.DisplayName,
-                GroupName = (clash.Parent as ClashResultGroup)?.DisplayName,
-                ClashName = clash.DisplayName,
-                ClashGuid = clash.Guid.ToString(),
-                Priority = GetEffectivePriority(clash),
-                Status = clash.Status.ToString(),
-                DistanceMm = clash.Distance.ToMillimetres(),
-                Description = clash.Description,
-                DateFound = clash.CreatedTime,
-                AssignedTo = clash.AssignedTo?.DisplayName,
-                ApprovedBy = clash.ApprovedBy?.DisplayName,
-                ApprovedTime = clash.ApprovedTime,
-                Comments = clash.Comments != null
-                    ? string.Join(" | ", clash.Comments.Select(c => c.Body))
-                    : null
+                TestStatus = test.Status.ToString(),
+                TestType = test.TestType.ToString(),
+                TestToleranceMm = test.Tolerance.ToMillimetres(),
+                TestLastRun = test.LastRun
             };
+        }
+
+        private static ClashRow BuildRow(ClashTest test, ClashResult clash, GridSystem gridSystem)
+        {
+            var row = NewRow(test);
+            row.GroupName = (clash.Parent as ClashResultGroup)?.DisplayName;
+            row.ClashName = clash.DisplayName;
+            row.ClashGuid = clash.Guid.ToString();
+            row.Priority = GetEffectivePriority(clash);
+            row.Status = clash.Status.ToString();
+            row.DistanceMm = clash.Distance.ToMillimetres();
+            row.Description = clash.Description;
+            row.DateFound = clash.CreatedTime;
+            row.AssignedTo = clash.AssignedTo?.DisplayName;
+            row.ApprovedBy = clash.ApprovedBy?.DisplayName;
+            row.ApprovedTime = clash.ApprovedTime;
+            row.Comments = clash.Comments != null
+                ? string.Join(" | ", clash.Comments.Select(c => c.Body))
+                : null;
 
             try
             {

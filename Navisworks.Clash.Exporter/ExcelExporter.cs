@@ -4,48 +4,20 @@ using Navisworks.Clash.Exporter.Models;
 
 namespace Navisworks.Clash.Exporter
 {
-    /// <summary>Writes extracted clash data to an .xlsx workbook using ClosedXML.</summary>
+    /// <summary>
+    /// Writes extracted clash data to an .xlsx workbook using ClosedXML. Every clash from
+    /// every clash test - grouped or individual - goes on a single worksheet, with the
+    /// attributes of its clash test repeated on each row.
+    /// </summary>
     public static class ExcelExporter
     {
         public static void Save(ExtractResult data, string fileName)
         {
             using (var workbook = new XLWorkbook())
             {
-                WriteSummary(workbook, data.Summary);
                 WriteClashes(workbook, data.Clashes);
                 workbook.SaveAs(fileName);
             }
-        }
-
-        private static void WriteSummary(XLWorkbook workbook, IReadOnlyList<ClashTestSummaryRow> rows)
-        {
-            var ws = workbook.Worksheets.Add("Summary");
-
-            var headers = new[]
-            {
-                "Clash Report", "Status", "Test Type", "Tolerance (mm)", "Last Run",
-                "New", "Active", "Reviewed", "Approved", "Resolved", "Total"
-            };
-            WriteHeader(ws, headers);
-
-            var r = 2;
-            foreach (var row in rows)
-            {
-                ws.Cell(r, 1).Value = row.TestName;
-                ws.Cell(r, 2).Value = row.Status;
-                ws.Cell(r, 3).Value = row.TestType;
-                ws.Cell(r, 4).Value = row.ToleranceMm;
-                if (row.LastRun.HasValue) ws.Cell(r, 5).Value = row.LastRun.Value;
-                ws.Cell(r, 6).Value = row.New;
-                ws.Cell(r, 7).Value = row.Active;
-                ws.Cell(r, 8).Value = row.Reviewed;
-                ws.Cell(r, 9).Value = row.Approved;
-                ws.Cell(r, 10).Value = row.Resolved;
-                ws.Cell(r, 11).Value = row.Total;
-                r++;
-            }
-
-            Finalise(ws, headers.Length, r - 1);
         }
 
         private static void WriteClashes(XLWorkbook workbook, IReadOnlyList<ClashRow> rows)
@@ -54,7 +26,8 @@ namespace Navisworks.Clash.Exporter
 
             var headers = new[]
             {
-                "Clash Report", "Group", "Clash Name", "Priority", "Status", "Distance (mm)",
+                "Clash Report", "Test Status", "Test Type", "Tolerance (mm)", "Last Run",
+                "Group", "Clash Name", "Priority", "Status", "Distance (mm)",
                 "Description", "Date Found", "Assigned To", "Approved By", "Approved Time",
                 "Level", "Grid Intersection", "Location (X, Y, Z)",
                 "Item 1 Name", "Item 1 Id", "Item 1 Source File",
@@ -67,27 +40,31 @@ namespace Navisworks.Clash.Exporter
             foreach (var row in rows)
             {
                 ws.Cell(r, 1).Value = row.TestName;
-                ws.Cell(r, 2).Value = row.GroupName;
-                ws.Cell(r, 3).Value = row.ClashName;
-                if (row.Priority.HasValue) ws.Cell(r, 4).Value = row.Priority.Value;
-                ws.Cell(r, 5).Value = row.Status;
-                ws.Cell(r, 6).Value = row.DistanceMm;
-                ws.Cell(r, 7).Value = row.Description;
-                if (row.DateFound.HasValue) ws.Cell(r, 8).Value = row.DateFound.Value;
-                ws.Cell(r, 9).Value = row.AssignedTo;
-                ws.Cell(r, 10).Value = row.ApprovedBy;
-                if (row.ApprovedTime.HasValue) ws.Cell(r, 11).Value = row.ApprovedTime.Value;
-                ws.Cell(r, 12).Value = row.Level;
-                ws.Cell(r, 13).Value = row.GridIntersection;
-                ws.Cell(r, 14).Value = row.Location;
-                ws.Cell(r, 15).Value = row.Item1Name;
-                ws.Cell(r, 16).Value = row.Item1Id;
-                ws.Cell(r, 17).Value = row.Item1SourceFile;
-                ws.Cell(r, 18).Value = row.Item2Name;
-                ws.Cell(r, 19).Value = row.Item2Id;
-                ws.Cell(r, 20).Value = row.Item2SourceFile;
-                ws.Cell(r, 21).Value = row.Comments;
-                ws.Cell(r, 22).Value = row.ClashGuid;
+                ws.Cell(r, 2).Value = row.TestStatus;
+                ws.Cell(r, 3).Value = row.TestType;
+                ws.Cell(r, 4).Value = row.TestToleranceMm;
+                if (row.TestLastRun.HasValue) ws.Cell(r, 5).Value = row.TestLastRun.Value;
+                ws.Cell(r, 6).Value = row.GroupName;
+                ws.Cell(r, 7).Value = row.ClashName;
+                if (row.Priority.HasValue) ws.Cell(r, 8).Value = row.Priority.Value;
+                ws.Cell(r, 9).Value = row.Status;
+                ws.Cell(r, 10).Value = row.DistanceMm;
+                ws.Cell(r, 11).Value = row.Description;
+                if (row.DateFound.HasValue) ws.Cell(r, 12).Value = row.DateFound.Value;
+                ws.Cell(r, 13).Value = row.AssignedTo;
+                ws.Cell(r, 14).Value = row.ApprovedBy;
+                if (row.ApprovedTime.HasValue) ws.Cell(r, 15).Value = row.ApprovedTime.Value;
+                ws.Cell(r, 16).Value = row.Level;
+                ws.Cell(r, 17).Value = row.GridIntersection;
+                ws.Cell(r, 18).Value = row.Location;
+                ws.Cell(r, 19).Value = row.Item1Name;
+                ws.Cell(r, 20).Value = row.Item1Id;
+                ws.Cell(r, 21).Value = row.Item1SourceFile;
+                ws.Cell(r, 22).Value = row.Item2Name;
+                ws.Cell(r, 23).Value = row.Item2Id;
+                ws.Cell(r, 24).Value = row.Item2SourceFile;
+                ws.Cell(r, 25).Value = row.Comments;
+                ws.Cell(r, 26).Value = row.ClashGuid;
                 r++;
             }
 
